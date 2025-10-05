@@ -19,6 +19,7 @@ CRITICAL_HIT_THRESHOLD = 18
 def display_status(character_name, current_hp, max_hp):
     """打印格式: 【角色名】HP: 当前血量 / 最大血量"""
     # 在这里写你的代码，用print()函数
+    print("%s HP: %s/%s" % (character_name, current_hp, max_hp))
     pass
 
 
@@ -27,6 +28,9 @@ def roll_dice(num_dice):
     """用while循环，模拟掷N个骰子，返回总点数"""
     total_points = 0
     count = 0
+    while count <= num_dice:
+        total_points += random.randint(1, 6)
+        count += 1
     # 在这里写你的代码
     return total_points
 
@@ -34,6 +38,12 @@ def roll_dice(num_dice):
 # 任务三：选择长门的行动
 def choose_nagato_action(nagato_hp, nabiya_hp):
     """用if/elif/else，根据血量返回 'attack', 'defend', 或 'special'"""
+    if nagato_hp < 30:
+        return "defend"
+    elif nabiya_hp < 20:
+        return "special"
+    else:
+        return "attack"
     # 在这里写你的代码
     pass
 
@@ -42,6 +52,7 @@ def choose_nagato_action(nagato_hp, nabiya_hp):
 def calculate_attack_damage(num_dice):
     """调用 roll_dice() 函数来计算伤害"""
     # 在这里写你的代码
+    return roll_dice(num_dice)
     pass
 
 
@@ -49,6 +60,7 @@ def calculate_attack_damage(num_dice):
 def calculate_defense_value(num_dice):
     """调用 roll_dice() 函数来计算防御值"""
     # 在这里写你的代码
+    return roll_dice(num_dice)
     pass
 
 
@@ -56,6 +68,10 @@ def calculate_defense_value(num_dice):
 def check_critical_hit(base_damage):
     """如果伤害 >= 18，返回 True，否则返回 False"""
     # 在这里写你的代码
+    if base_damage >= 18:
+        return True
+    else:
+        return False
     pass
 
 
@@ -63,6 +79,10 @@ def check_critical_hit(base_damage):
 def nabiya_ai_action(nabiya_hp):
     """如果娜比娅HP <= 40，返回 'defend'，否则返回 'attack'"""
     # 在这里写你的代码
+    if nabiya_hp <= 40:
+        return "defend"
+    else:
+        return "attack"
     pass
 
 
@@ -70,7 +90,7 @@ def nabiya_ai_action(nabiya_hp):
 def main_battle_loop():
     """
     这是最重要的部分！请根据下面的注释步骤来完成。
-    
+
     适当的编写输出来说明战斗发生了什么，比如：
     print("长门：「感受BIG SEVEN的威力吧！」")
     print("💥「BIG SEVEN」触发！伤害翻倍！")
@@ -81,7 +101,75 @@ def main_battle_loop():
     nagato_defense_bonus = 0
     nabiya_defense_bonus = 0
     turn = 1
+    nagato_defense_flag = False
+    nabiya_defense_flag = False
+    while nabiya_hp > 0 and nagato_hp > 0:
+        print(f"\n======== 回合 {turn} ========")
+        display_status("长门", nagato_hp, NAGATO_MAX_HP)
+        display_status("娜比娅", nabiya_hp, NABIYA_MAX_HP)
 
+        print("\n>>> 长门的回合")
+        action = choose_nagato_action(nagato_hp, nabiya_hp)
+        if action == "attack":
+            temp = calculate_attack_damage(NAGATO_ATTACK_DICE)
+            if nabiya_defense_flag:
+                temp -= nabiya_defense_bonus
+                temp = max(temp, 0)
+            nabiya_hp -= temp
+            nagato_defense_flag = False
+            print("\n长门大人选择了猛烈的进攻")
+        elif action == "defend":
+            nagato_defense_bonus = calculate_defense_value(NAGATO_DEFEND_DICE)
+            nagato_defense_flag = True
+            print("\n长门大人选择了优雅的防守")
+        else:
+            temp = random.randint(0, 1)
+            if temp == 1:
+                temp = 30
+            if nabiya_defense_flag:
+                temp -= nabiya_defense_bonus
+                temp = max(temp, 0)
+            nabiya_hp -= temp
+            nagato_defense_flag = False
+            print("\n长门大人选择了向上天祈祷")
+
+        if nabiya_hp <= 0:
+            print("娜比娅；啊我死了")
+            break
+
+        time.sleep(1)
+
+        print("\n>>> 娜比娅的回合")
+        action = nabiya_ai_action(nabiya_hp)
+        if action == "attack":
+            temp = calculate_attack_damage(NABIYA_ATTACK_DICE)
+            if nagato_defense_flag:
+                temp -= nagato_defense_bonus
+                temp = max(temp, 0)
+            nagato_hp -= temp
+            nabiya_defense_flag = False
+            print("\n娜比娅选择了进攻，漂亮的一击")
+        elif action == "defend":
+            nabiya_defense_flag = True
+            nabiya_defense_bonus = calculate_defense_value(NABIYA_DEFEND_DICE)
+            print("\n娜比娅找到了一个龟壳")
+        else:
+            temp = random.randint(0, 1)
+            if temp == 1:
+                temp = 30
+            if nagato_defense_flag:
+                temp -= nagato_defense_bonus
+                temp = max(temp, 0)
+            nagato_hp -= temp
+            nabiya_defense_flag = False
+            print("\n娜比娅选择向长门大人祈祷（？")
+
+        if nagato_hp <= 0:
+            print("长门：可恶")
+            break
+
+        turn += 1
+        time.sleep(1)
     # 2. 编写 while 循环，在双方都存活时继续战斗
     # 注意，不需要你编写选择行动的代码，只需要编写行动后的逻辑即可
     # while ...
@@ -93,7 +181,7 @@ def main_battle_loop():
         # 3. --- 长门的回合 ---
         # print("\n>>> 长门的回合")
         # action = choose_nagato_action(...)
-        
+
         # 用 if/elif/else 处理不同行动
         # if action == 'attack':
         #     ...
@@ -101,23 +189,23 @@ def main_battle_loop():
         #     ...
         # else: # special
         #     ...
-        
+
         # 4. 检查娜比娅是否被击败
         # if nabiya_hp <= 0:
         #     ...
-        
+
         # time.sleep(1)
 
         # 5. --- 娜比娅的回合 ---
         # print("\n>>> 娜比娅的回合")
         # (和长门回合逻辑类似)
-        
+
         # 6. 检查长门是否被击败
         # if nagato_hp <= 0:
         #     ...
 
         # turn = turn + 1
         # time.sleep(1)
-    
+
     # 在这里写你的代码
     pass
