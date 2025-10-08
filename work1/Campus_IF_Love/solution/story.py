@@ -93,10 +93,37 @@ class Character:
         self.change_affinity(5)
         print(f"{self.name}对你的好感度发生了改变")
 
-    def give_gift(self, gift):
+    def give_gift(self, gift, money):
         print(f"你送给 {self.name} 一份 {gift}。")
         # TODO: 完成礼物好感度逻辑（送出不同礼物加不同的好感度） 并调用change_affinity（）函数 传入此次好感度变化的数值value
-        pass
+        ans = input(
+            f"请选择你要送的礼物\n鲜花10r/编程笔记15r/奶茶30r/奇怪的石头5r/精致的钢笔20r/可爱玩偶15r/夜宵外卖20r")
+        if ans == "鲜花" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        elif ans == "编程笔记" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        elif ans == "奶茶" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        elif ans == "奇怪的石头" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        elif ans == "精致的钢笔" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        elif ans == "可爱玩偶" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        elif ans == "夜宵外卖" and money >= GIFT_EFFECTS[ans]["价格"]:
+            self.change_affinity(GIFT_EFFECTS[ans][self.name])
+            money -= GIFT_EFFECTS[ans]["价格"]
+        else:
+            print("穷鬼还是别谈恋爱了")
+            return
+        print(f"{self.name}对你的好感度发生了改变")
+        return money
 
     def change_affinity(self, value):
         self.affinity += value
@@ -108,6 +135,17 @@ class Character:
             return True
         return False
 
+
+GIFT_EFFECTS = {
+    # 通用 / 默认 值
+    "鲜花": {"学姐": 10, "小白": 10, "姐姐": 15, "价格": 10},
+    "编程笔记": {"学姐": 5, "小白": 15, "姐姐": 15, "价格": 15},
+    "奶茶": {"学姐": 20, "小白": 20, "姐姐": 20, "价格": 30},
+    "奇怪的石头": {"default": -10, "价格": 5},  # 所有人 -10
+    "精致的钢笔": {"学姐": 20, "小白": 10, "姐姐": 20, "价格": 20},
+    "可爱玩偶": {"学姐": 10, "小白": 20, "姐姐": 10, "价格": 15},
+    "夜宵外卖": {"学姐": 0, "小白": 5, "姐姐": -5, "价格": 20}
+}
 
 DIALOGUES = {
     "学姐": [
