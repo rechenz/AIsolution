@@ -1,7 +1,7 @@
 import sys
 import manage
 from story import Character
-from manage import save
+# from manage import save
 
 
 class Game:
@@ -100,9 +100,10 @@ class Game:
 
             # 输入2----
             elif choice == "2":
-                print("可选礼物：鲜花 / 编程笔记 / 奶茶 / 奇怪的石头 / 精致的钢笔 / 可爱玩偶 / 夜宵外卖")
-                gift = input("请输入礼物名称：").strip()
-                self.current_target.give_gift(gift)
+                # print("可选礼物：鲜花 / 编程笔记 / 奶茶 / 奇怪的石头 / 精致的钢笔 / 可爱玩偶 / 夜宵外卖")
+                # gift = input("请输入礼物名称：").strip()
+                manage.mainmoney = self.current_target.give_gift(
+                    manage.mainmoney)
 
             # 输入3----
             elif choice == "3":
@@ -118,4 +119,4 @@ class Game:
 
             if self.current_target.check_ending():
                 break
-            save()
+            # save()

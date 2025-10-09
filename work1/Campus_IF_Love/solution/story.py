@@ -1,3 +1,7 @@
+from math import floor
+import manage
+
+
 class Character:
     def __init__(self, name, role, affinity=0):
         self.name = name
@@ -9,9 +13,10 @@ class Character:
         # TODO: 补充具体对话，对话内容可以从剧本里面截取 根据主人公的不同，使用不同的对话（你也可以根据好感度的不同/对话次数的不同 改变对话和选项）
         num = self.affinity/20
         num: int
-        print(f"{DIALOGUES[self.name][num]["text"]}")
+        num = floor(num)
+        print(f"{self.name}:{DIALOGUES[self.name][num]["text"]}")
         ans = input(
-            f"optionA:{DIALOGUES[self.name][num]["optionA"]}\noptionB:{DIALOGUES[self.name][num]["optionB"]}")
+            f"optionA:{DIALOGUES[self.name][num]["optionA"]}\noptionB:{DIALOGUES[self.name][num]["optionB"]}\n")
         if self.name == "学姐":
             if num == 0:
                 if ans == 'A' or ans == 'a':
@@ -93,11 +98,11 @@ class Character:
         self.change_affinity(5)
         print(f"{self.name}对你的好感度发生了改变")
 
-    def give_gift(self, gift, money):
-        print(f"你送给 {self.name} 一份 {gift}。")
+    def give_gift(self, money):
+        # print(f"你送给 {self.name} 一份 {gift}。")
         # TODO: 完成礼物好感度逻辑（送出不同礼物加不同的好感度） 并调用change_affinity（）函数 传入此次好感度变化的数值value
         ans = input(
-            f"请选择你要送的礼物\n鲜花10r/编程笔记15r/奶茶30r/奇怪的石头5r/精致的钢笔20r/可爱玩偶15r/夜宵外卖20r")
+            f"你现在有{money}块钱\n请选择你要送的礼物\n鲜花10r/编程笔记15r/奶茶30r/奇怪的石头5r/精致的钢笔20r/可爱玩偶15r/夜宵外卖20r\n")
         if ans == "鲜花" and money >= GIFT_EFFECTS[ans]["价格"]:
             self.change_affinity(GIFT_EFFECTS[ans][self.name])
             money -= GIFT_EFFECTS[ans]["价格"]
@@ -132,6 +137,7 @@ class Character:
     def check_ending(self):
         if self.affinity >= 100:
             print(f"恭喜！你和 {self.name} 的故事进入了结局线！")
+            print(f"但显然，学习之路漫漫，故事并不局限在这个终端中，你会亲自在自己的人生中书写下更为精彩的故事。")
             return True
         return False
 
@@ -141,7 +147,7 @@ GIFT_EFFECTS = {
     "鲜花": {"学姐": 10, "小白": 10, "姐姐": 15, "价格": 10},
     "编程笔记": {"学姐": 5, "小白": 15, "姐姐": 15, "价格": 15},
     "奶茶": {"学姐": 20, "小白": 20, "姐姐": 20, "价格": 30},
-    "奇怪的石头": {"default": -10, "价格": 5},  # 所有人 -10
+    "奇怪的石头": {"学姐": -10, "小白": -10, "姐姐": -10, "价格": 5},  # 所有人 -10
     "精致的钢笔": {"学姐": 20, "小白": 10, "姐姐": 20, "价格": 20},
     "可爱玩偶": {"学姐": 10, "小白": 20, "姐姐": 10, "价格": 15},
     "夜宵外卖": {"学姐": 0, "小白": 5, "姐姐": -5, "价格": 20}
