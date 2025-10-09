@@ -1,5 +1,5 @@
 from math import floor
-import manage
+# import manage
 
 
 class Character:
@@ -98,11 +98,12 @@ class Character:
         self.change_affinity(5)
         print(f"{self.name}对你的好感度发生了改变")
 
-    def give_gift(self, money):
+    def give_gift(self, money: int):
         # print(f"你送给 {self.name} 一份 {gift}。")
         # TODO: 完成礼物好感度逻辑（送出不同礼物加不同的好感度） 并调用change_affinity（）函数 传入此次好感度变化的数值value
         ans = input(
             f"你现在有{money}块钱\n请选择你要送的礼物\n鲜花10r/编程笔记15r/奶茶30r/奇怪的石头5r/精致的钢笔20r/可爱玩偶15r/夜宵外卖20r\n")
+        ans: str
         if ans == "鲜花" and money >= GIFT_EFFECTS[ans]["价格"]:
             self.change_affinity(GIFT_EFFECTS[ans][self.name])
             money -= GIFT_EFFECTS[ans]["价格"]
@@ -132,12 +133,12 @@ class Character:
 
     def change_affinity(self, value):
         self.affinity += value
-        print(f"{self.name} 的好感度变化 {value} -> 当前好感度：{self.affinity}")
+        # print(f"{self.name} 的好感度变化 {value} -> 当前好感度：{self.affinity}")
 
     def check_ending(self):
         if self.affinity >= 100:
             print(f"恭喜！你和 {self.name} 的故事进入了结局线！")
-            print(f"但显然，学习之路漫漫，故事并不局限在这个终端中，你会亲自在自己的人生中书写下更为精彩的故事。")
+            print("甜蜜的后续发展还请自己脑补，但显然，学习之路漫漫，故事并不局限在这个终端中，你会亲自在自己的人生中书写下更为精彩的故事。")
             return True
         return False
 
