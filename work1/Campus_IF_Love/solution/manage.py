@@ -2,6 +2,7 @@ import story
 import game
 
 mainmoney = 100
+mainmoney: int
 # 你拥有的钱。可以用来买礼物
 character1affinity = 0
 character2affinity = 0
