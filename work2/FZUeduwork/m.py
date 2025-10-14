@@ -38,10 +38,13 @@ with open('AIsolution/work2/FZUeduwork/fzu.csv', 'w', newline='', encoding='utf-
                 tt = temp.find('font')
                 if tt:
                     date = tt.string
+        href = str(href)
+        href = "https://jwch.fzu.edu.cn/"+href
         writer.writerow([annoucer, title, date, href])
+    # exit()
     for page in range(1, 206, 1):
         url = f"https://jwch.fzu.edu.cn/jxtz/{206-page}.htm"
-        # print(url)
+        print(page)
         # writer.writerow([1, 1, 1, 1, 1])
         response = requests.get(url)
         response.encoding = 'utf-8'
@@ -75,4 +78,6 @@ with open('AIsolution/work2/FZUeduwork/fzu.csv', 'w', newline='', encoding='utf-
                     tt = temp.find('font')
                     if tt:
                         date = tt.string
+            href = str(href)
+            href = str.replace(href, "../", "https://jwch.fzu.edu.cn/")
             writer.writerow([annoucer, title, date, href])
