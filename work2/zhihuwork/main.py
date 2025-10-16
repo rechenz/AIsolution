@@ -60,9 +60,10 @@ with open("AIsolution/work2/zhihuwork/zhihu.csv", "w", encoding="utf-8-sig") as 
     writer = csv.writer(file)
     writer.writerow(["问题名", "问题具体内容", "回答信息"])
     num = 2
-    count = 0
+    count = 1
     while count <= 20:  # 从问题开始
         time.sleep(3)
+        print(f"第{count}个问题")
         # if num == 19:
         #     print(1)
         check = get_element(
@@ -111,15 +112,46 @@ with open("AIsolution/work2/zhihuwork/zhihu.csv", "w", encoding="utf-8-sig") as 
         problemcontent = scurelement.text
         li.append(problemname)
         li.append(problemcontent)
-        # for i in range(2, 12):  # 10个回答
-        #     scurelement = browser.find_element(
-        #         By.XPATH, f'/html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[{i}]/div/div/div[2]/span[1]/div/div/span/span[1]')
-        #     #               /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[3]/div/div/div[2]/span[1]/div/div/span/span[1]
-        #     answercontent = scurelement.text
-        #     li.append(answercontent)
-        #     browser.execute_script(
-        #         "arguments[0].scrollIntoView();", scurelement)
-        # writer.writerow(li)
+        time.sleep(1)
+        show = browser.find_element(
+            By.XPATH, '/html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[4]/a')
+        #              /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[4]/a
+        show.click()
+        firstanwser = browser.find_element(
+            By.XPATH, '/html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[2]/div/div/div[2]/span[1]/div/div/span')
+        answercontent = firstanwser.text
+        li.append(answercontent)
+        s = 2
+        i = 3
+        last = False
+        while s <= 10:  # 10个回答
+            print(f"第{s}个回答")
+            checkcur = get_element(
+                browser, f'/html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[{i}]/div/div/div[2]/span[1]/div/div/span')
+            if checkcur == False:
+                i += 1
+                if last == True:
+                    s += 1
+                last = True
+                continue
+            scurelement = browser.find_element(
+                By.XPATH, f'/html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[{i}]/div/div/div[2]/span[1]/div/div/span')
+            '''
+            /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[3]/div/div/div[2]/span[1]/div/div/span
+            /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[4]/div/div/div[2]/span[1]/div/div/span
+            /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[3]/div/div/div[2]/span[1]/div/div/span
+            /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[4]/div/div/div[2]/span[1]/div/div/span
+            /html/body/div[1]/div/main/div/div/div[3]/div[1]/div/div[1]/div/div/div/div[2]/div/div[6]/div/div/div[2]/span[1]/div/div/span
+            '''
+            answercontent = scurelement.text
+            li.append(answercontent)
+            browser.execute_script(
+                "arguments[0].scrollIntoView();", scurelement)
+            i += 1
+            s += 1
+            time.sleep(2)
+        writer.writerow(li)
         num += 1
         count += 1
+        browser.back()
         browser.back()
