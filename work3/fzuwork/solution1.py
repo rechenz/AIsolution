@@ -2,7 +2,7 @@ import pandas as pd
 
 
 datasource = pd.read_csv(
-    'AIsolution/work3/pandaswork/fzu.csv', header=0, encoding='utf-8')
+    'AIsolution/work3/fzuwork/fzu.csv', header=0, encoding='utf-8')
 datasource.dropna(axis=0,  thresh=1, inplace=True)
 dic = {}
 for index, row in datasource.iterrows():
