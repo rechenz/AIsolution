@@ -150,13 +150,78 @@ def find_the_k():
     return best_k
 
 
+'''
 def test(k):
     print('Start to final test')
     total_num = 10000.0
     correct_num = 0.0
     for test_id in range(10000):
         print(test_id)
-        test_data_temp = test_data[test_id-1]
+        test_data_temp = test_data[test_id]
+        check_arr = np.zeros(10)
+        distance_list = []
+        for train_id in range(1, 6):
+            train_data = data[train_id-1]
+            distances = np.sqrt(
+                np.sum(np.square(test_data_temp-train_data), axis=(1, 2, 3)))
+            distance_list.extend(distances)
+        distance_list = np.array(distance_list)
+        distance_list = np.argpartition(distance_list, k)[:k]
+        for t in distance_list:
+            check_arr[datalabel[t//10000][t % 10000]] += 1
+        if np.argmax(check_arr) == testlabel[test_id]:
+            correct_num += 1
+    return correct_num/total_num
+
+def test(k):
+    print('Start to final test')
+    total_num = 10000
+    correct_num = 0
+    batch_size = 100  # 添加批量处理
+
+    # 转换为PyTorch张量并移动到GPU
+    test_data_tensor = torch.from_numpy(test_data).to(device)
+    train_data_tensor = torch.from_numpy(
+        data.reshape(-1, 3, 32, 32)).to(device)
+    testlabel_tensor = torch.from_numpy(testlabel).to(device)
+    train_labels_tensor = torch.from_numpy(datalabel.reshape(-1)).to(device)
+
+    for i in range(0, total_num, batch_size):
+        batch_end = min(i + batch_size, total_num)
+        print(
+            f'Processing batch {i//batch_size + 1}/{(total_num-1)//batch_size + 1}')
+
+        # 获取当前批次
+        test_batch = test_data_tensor[i:batch_end]
+
+        # 计算距离矩阵
+        diff = test_batch.unsqueeze(1) - train_data_tensor.unsqueeze(0)
+        distances = torch.sqrt(torch.sum(diff ** 2, dim=(2, 3, 4)))
+
+        # 获取最近的k个邻居
+        _, nearest_indices = torch.topk(distances, k, largest=False)
+
+        # 统计标签并预测
+        predictions = torch.mode(
+            train_labels_tensor[nearest_indices], dim=1)[0]
+
+        # 计算准确率
+        correct_num += torch.sum(predictions ==
+                                 testlabel_tensor[i:batch_end]).item()
+
+    accuracy = correct_num / total_num
+    print(f'Test accuracy: {accuracy:.4f}')
+    return accuracy
+'''
+
+
+def test(k):
+    print('Start to final test')
+    total_num = 10000.0
+    correct_num = 0.0
+    for test_id in range(10000):
+        print(test_id)
+        test_data_temp = test_data[test_id]
         check_arr = np.zeros(10)
         distance_list = []
         for train_id in range(1, 6):
@@ -174,6 +239,8 @@ def test(k):
 
 
 if __name__ == '__main__':
+    # print(torch.cuda.is_available())
+    # exit()
     fetch_data()
     # k = find_the_k()
     k = 5
