@@ -23,9 +23,7 @@ def fetch_data():
     global datameta
     global data, datalabel
     global test_data, testlabel
-    # E:\projects\datasets
-    datameta = unpickle(
-        'E:/projects/datasets/cifar-10-batches-py/batches.meta')
+    datameta = unpickle('E:/projects/datasets/cifar-10-batches-py/batches.meta')#E:\projects\datasets
     for i in range(1, 6):
         file = f'E:/projects/datasets/cifar-10-batches-py/data_batch_{i}'
         dict = unpickle(file)
@@ -122,7 +120,7 @@ def find_the_k():
     max_accuracy = 0.0
     best_k = None
     for k in [1, 3, 5, 10, 20, 50, 100]:
-        # print(f'Now k is {k}')
+        print(f'Now k is {k}')
         correct_num = 0.0
         for i in range(1000):
             # print(f'Now sample_id is {i}')
@@ -222,7 +220,7 @@ def test(k):
     total_num = 10000.0
     correct_num = 0.0
     for test_id in range(10000):
-        # print(test_id)
+        print(test_id)
         test_data_temp = test_data[test_id]
         check_arr = np.zeros(10)
         distance_list = []
