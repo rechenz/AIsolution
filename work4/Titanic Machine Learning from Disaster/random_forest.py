@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn import linear_model
+from sklearn import ensemble
 
 
 def preprocess_data():
@@ -28,12 +28,10 @@ def preprocess_data():
 
 
 def train(train_data):
-    X = train_data.drop(['Survived'], axis=1)
-    y = train_data['Survived']
-
-    model = linear_model.LogisticRegression(max_iter=10000)
-    model.fit(X, y)
-
+    model = ensemble.RandomForestClassifier(
+        n_estimators=10000, random_state=0)
+    model.fit(train_data.drop('Survived', axis=1),
+              train_data['Survived'])
     return model
 
 
