@@ -77,8 +77,12 @@ def preprocess_data():
     test_data.drop(['Embarked'], axis=1, inplace=True)
     train_data['Age'] = train_data['Age'].fillna(train_data['Age'].median())
     test_data['Age'] = test_data['Age'].fillna(test_data['Age'].median())
+    train_data['Age'] = train_data['Age']/100
+    test_data['Age'] = test_data['Age']/100
     train_data['Fare'] = train_data['Fare'].fillna(train_data['Fare'].median())
     test_data['Fare'] = test_data['Fare'].fillna(test_data['Fare'].median())
+    train_data['Fare'] = train_data['Fare']/train_data['Fare'].max()
+    test_data['Fare'] = test_data['Fare']/train_data['Fare'].max()
     train_data['FamilySize'] = train_data['SibSp'] + train_data['Parch']+1
     test_data['FamilySize'] = test_data['SibSp'] + test_data['Parch']+1
     train_data['Cabin'].fillna(0, inplace=True)
@@ -263,14 +267,14 @@ def select_features(train_data, test_data):
 
 def main():
     train_data, test_data, test_id = preprocess_data()
-    train_data, test_data = select_features(train_data, test_data)
     traind, test = model_selection.train_test_split(
         train_data, test_size=0.1, random_state=42)
-    # model = train(traind)
-    # predict(model, test)
+    train_data, test_data = select_features(train_data, test_data)
+    model = train(traind)
+    predict(model, test)
     # train_data, test_data = select_features(train_data, test_data)
-    model = train(train_data)
-    predict_and_submit(model, test_data, test_id)
+    # model = train(train_data)
+    # predict_and_submit(model, test_data, test_id)
 
 
 if __name__ == '__main__':
