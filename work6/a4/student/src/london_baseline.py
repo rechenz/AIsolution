@@ -7,15 +7,22 @@
 import argparse
 import utils
 
+
 def main():
     accuracy = 0.0
 
     # Compute accuracy in the range [0.0, 100.0]
     ### YOUR CODE HERE ###
-    pass
+    predict = open(
+        "E:/projects/AIsolution/work6/a4/student/vanilla.pretrain.test.predictions", "r", encoding="utf-8")
+    ans = 'London'
+    for line in predict:
+        if line.strip() == ans:
+            accuracy += 1
     ### END YOUR CODE ###
 
     return accuracy
+
 
 if __name__ == '__main__':
     accuracy = main()

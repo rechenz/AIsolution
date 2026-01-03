@@ -76,7 +76,9 @@ if __name__ == '__main__':
         # TODO: [part g] Make some other model here
         # set mconf.rope parameter
         ### YOUR CODE HERE ###
-        pass
+        mconf.rope = True
+        model = models.GPT(mconf)
+        model.to(device)
         ### END YOUR CODE ###
     else:
         raise ValueError("Unknown model variant")
@@ -104,9 +106,21 @@ if __name__ == '__main__':
         # final_tokens=650*len(pretrain_dataset)*block_size
         # num_workers=4
         # writer=writer
-
         ### YOUR CODE HERE ###
-        pass
+        preconfig = trainer.TrainerConfig(
+            max_epochs=650,
+            batch_size=128,
+            learning_rate=args.pretrain_lr,
+            lr_decay=True,
+            warmup_tokens=512*20,
+            final_tokens=650*len(pretrain_dataset)*block_size,
+            num_workers=4,
+            writer=writer)
+        text = open(args.pretrain_corpus_path, encoding='utf-8').read()
+        pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
+        pretrainer = trainer.Trainer(model, pretrain_dataset, None, preconfig)
+        pretrainer.train()
+        torch.save(model.state_dict(), args.writing_params_path)
         ### END YOUR CODE ###
     elif args.function == 'finetune':
         assert args.writing_params_path is not None
@@ -150,8 +164,9 @@ if __name__ == '__main__':
                 args.reading_params_path))
         else:
             pass
+        text = open(args.finetune_corpus_path, encoding='utf-8').read()
         finetune_dataset = dataset.NameDataset(pretrain_dataset,
-                                               args.finetune_corpus_path)
+                                               text)
         if args.reading_params_path is not None:
             tconf = trainer.TrainerConfig(
                 max_epochs=10,
